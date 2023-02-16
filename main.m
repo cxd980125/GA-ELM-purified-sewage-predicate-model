@@ -1,4 +1,4 @@
-%% ³õÊ¼»¯
+%% åˆå§‹åŒ–
 clear
 close all
 clc
@@ -6,146 +6,141 @@ format shortg
 warning off
 addpath('func_defined')
 
-%% Êı¾İ¶ÁÈ¡
-data=xlsread('ĞÂÊı¾İ.xlsx','Sheet1','A1:N342'); %%Ê¹ÓÃxlsreadº¯Êı¶ÁÈ¡EXCELÖĞ¶ÔÓ¦·¶Î§µÄÊı¾İ¼´¿É  
+%% æ•°æ®è¯»å–
+data = xlsread('æ–°æ•°æ®.xlsx','Sheet1','A1:N342');  
 opts.PreserveVariableNames = true;
-%ÊäÈëÊä³öÊı¾İ
-input=data(:,[1,2,3,4,5,7,8,9,10,11]);    %dataµÄµÚÒ»ÁĞ-µ¹ÊıµÚ¶şÁĞÎªÌØÕ÷Ö¸±ê input=data(:,1:end-1)
-output=data(:,6);  %dataµÄ×îºóÃæÒ»ÁĞÎªÊä³öµÄÖ¸±êÖµ (:,end)
+% è¾“å…¥å±æ€§åˆ—
+input = data(:,[1,2,3,4,5,7,8,9,10,11]);
+% æ ‡è®°è¾“å‡ºå±æ€§
+output = data(:,6); 
 
-N = length(output);   %È«²¿Ñù±¾ÊıÄ¿
-testNum = 15;   %Éè¶¨²âÊÔÑù±¾ÊıÄ¿ 15
-trainNum = N-testNum;    %¼ÆËãÑµÁ·Ñù±¾ÊıÄ¿
+% å…¨éƒ¨æ ·æœ¬æ•°ç›®
+N = length(output);   
+testNum = 15;   %è®¾å®šæµ‹è¯•æ ·æœ¬æ•°ç›® 15
+% è®¡ç®—è®­ç»ƒæ ·æœ¬æ•°ç›®
+trainNum = N-testNum;    
 
-%% »®·ÖÑµÁ·¼¯¡¢²âÊÔ¼¯
+%% åˆ’åˆ†è®­ç»ƒé›†ã€æµ‹è¯•é›†
 input_train = input(1:trainNum,:)';
 output_train = output(1:trainNum)';
 input_test = input(trainNum + 1:trainNum+testNum,:)';
 output_test = output(trainNum + 1:trainNum+testNum)';
 
-%% Êı¾İ¹éÒ»»¯
+%% æ•°æ®å½’ä¸€åŒ–
 [inputn,inputps] = mapminmax(input_train,-1,1);
 [outputn,outputps] = mapminmax(output_train);
 inputn_test = mapminmax('apply',input_test,inputps);
 
-%% »ñÈ¡ÊäÈë²ã½Úµã¡¢Êä³ö²ã½Úµã¸öÊı
+%% è·å–è¾“å…¥å±‚èŠ‚ç‚¹ã€è¾“å‡ºå±‚èŠ‚ç‚¹ä¸ªæ•°
 inputnum = size(input,2);
 outputnum = size(output,2);
 disp('/////////////////////////////////')
-disp('¼«ÏŞÑ§Ï°»úELM½á¹¹...')
-disp(['ÊäÈë²ãµÄ½ÚµãÊıÎª£º',num2str(inputnum)])
-disp(['Êä³ö²ãµÄ½ÚµãÊıÎª£º',num2str(outputnum)])
+disp('æé™å­¦ä¹ æœºELMç»“æ„...')
+disp(['è¾“å…¥å±‚çš„èŠ‚ç‚¹æ•°ä¸ºï¼š',num2str(inputnum)])
+disp(['è¾“å‡ºå±‚çš„èŠ‚ç‚¹æ•°ä¸ºï¼š',num2str(outputnum)])
 disp(' ')
-disp('Òşº¬²ã½ÚµãµÄÈ·¶¨¹ı³Ì...')
+disp('éšå«å±‚èŠ‚ç‚¹çš„ç¡®å®šè¿‡ç¨‹...')
 
-%È·¶¨Òşº¬²ã½Úµã¸öÊı
-%×¢Òâ£ºBPÉñ¾­ÍøÂçÈ·¶¨Òşº¬²ã½ÚµãµÄ·½·¨ÊÇ£º²ÉÓÃ¾­Ñé¹«Ê½hiddennum=sqrt(m+n)+a£¬mÎªÊäÈë²ã½Úµã¸öÊı£¬nÎªÊä³ö²ã½Úµã¸öÊı£¬aÒ»°ãÈ¡Îª1-10Ö®¼äµÄÕûÊı
-%ÔÚ¼«ÏŞÑ§Ï°»úÖĞ£¬¸Ã¾­Ñé¹«Ê½ÍùÍù»áÊ§Ğ§£¬ÉèÖÃ½Ï´óµÄ·¶Î§½øĞĞÒşº¬²ã½ÚµãÊıÄ¿µÄÈ·¶¨¼´¿É¡£
-
-MSE = 1e+5; %³õÊ¼»¯×îĞ¡Îó²î
-for hiddennum = 20:50  % Òşº¬²ãÊı 20~30                    
-    
-    %ÓÃÑµÁ·Êı¾İÑµÁ·¼«ÏŞÑ§Ï°»úÄ£ĞÍ
+% åˆå§‹åŒ–æœ€å°è¯¯å·®
+MSE = 1e+5;
+% éšå«å±‚æ•° 20~50
+for hiddennum = 20:50                      
+    % ç”¨è®­ç»ƒæ•°æ®è®­ç»ƒæé™å­¦ä¹ æœºæ¨¡å‹
    [IW0,B0,LW0,TF,TYPE] = elmtrain(inputn,outputn,hiddennum);
    
-    %¶ÔÑµÁ·¼¯·ÂÕæ
-    an0 = elmpredict(inputn,IW0,B0,LW0,TF,TYPE);  %·ÂÕæ½á¹û
-    mse0 = mse(outputn,an0);  %·ÂÕæµÄ¾ù·½Îó²î
-    disp(['Òşº¬²ã½ÚµãÊıÎª',num2str(hiddennum),'Ê±£¬ÑµÁ·¼¯µÄ¾ù·½Îó²îÎª£º',num2str(mse0)])
+    % å¯¹è®­ç»ƒé›†ä»¿çœŸ
+    an0 = elmpredict(inputn,IW0,B0,LW0,TF,TYPE);  % ä»¿çœŸç»“æœ
+    mse0 = mse(outputn,an0);  % ä»¿çœŸçš„å‡æ–¹è¯¯å·®
+    disp(['éšå«å±‚èŠ‚ç‚¹æ•°ä¸º',num2str(hiddennum),'æ—¶ï¼Œè®­ç»ƒé›†çš„å‡æ–¹è¯¯å·®ä¸ºï¼š',num2str(mse0)])
 
-    %¸üĞÂ×î¼ÑµÄÒşº¬²ã½Úµã
+    % æ›´æ–°æœ€ä½³çš„éšå«å±‚èŠ‚ç‚¹
     if mse0<MSE
         MSE=mse0;
         hiddennum_best=hiddennum;
     end
 end
-disp(['×î¼ÑµÄÒşº¬²ã½ÚµãÊıÎª£º',num2str(hiddennum_best),'£¬ÏàÓ¦µÄ¾ù·½Îó²îÎª£º',num2str(MSE)])
+disp(['æœ€ä½³çš„éšå«å±‚èŠ‚ç‚¹æ•°ä¸ºï¼š',num2str(hiddennum_best),'ï¼Œç›¸åº”çš„å‡æ–¹è¯¯å·®ä¸ºï¼š',num2str(MSE)])
 
 save para hiddennum_best inputn outputn output_train inputn_test outputps output_test
 
-%% ÑµÁ·×î¼ÑÒşº¬²ã½ÚµãµÄ¼«ÏŞÑ§Ï°»úÄ£ĞÍ
+%% è®­ç»ƒæœ€ä½³éšå«å±‚èŠ‚ç‚¹çš„æé™å­¦ä¹ æœºæ¨¡å‹
 disp(' ')
-disp('ELM¼«ÏŞÑ§Ï°»ú£º')
+disp('ELMæé™å­¦ä¹ æœºï¼š')
 [IW0,B0,LW0,TF,TYPE] = elmtrain(inputn,outputn,hiddennum_best);
 
-%% Ä£ĞÍ²âÊÔ
-an0=elmpredict(inputn_test,IW0,B0,LW0,TF,TYPE); %ÓÃÑµÁ·ºÃµÄÄ£ĞÍ½øĞĞ·ÂÕæ
-test_simu0=mapminmax('reverse',an0,outputps); % Ô¤²â½á¹û·´¹éÒ»»¯
-%Îó²îÖ¸±ê
+%% æ¨¡å‹æµ‹è¯•
+an0=elmpredict(inputn_test,IW0,B0,LW0,TF,TYPE); % ç”¨è®­ç»ƒå¥½çš„æ¨¡å‹è¿›è¡Œä»¿çœŸ
+test_simu0=mapminmax('reverse',an0,outputps); % é¢„æµ‹ç»“æœåå½’ä¸€åŒ–
+% è¯¯å·®æŒ‡æ ‡
 [mae0,mse0,rmse0,mape0,error0,errorPercent0]=calc_error(output_test,test_simu0);
 
-%% ÒÅ´«Ëã·¨Ñ°×îÓÅÈ¨ÖµãĞÖµ
+%% é—ä¼ ç®—æ³•å¯»æœ€ä¼˜æƒå€¼é˜ˆå€¼
 disp(' ')
-disp('GAÓÅ»¯ELM¼«ÏŞÑ§Ï°»ú£º')
-%³õÊ¼»¯ga²ÎÊı
-PopulationSize_Data=30;   %³õÊ¼ÖÖÈº¹æÄ£
-MaxGenerations_Data=80;   %×î´ó½ø»¯´úÊı
-CrossoverFraction_Data=0.8;  %½»²æ¸ÅÂÊ
-MigrationFraction_Data=0.2;   %±äÒì¸ÅÂÊ
-nvars=inputnum*hiddennum_best+hiddennum_best;    %×Ô±äÁ¿¸öÊı
-%×Ô±äÁ¿ÏÂÏŞ
-lb=[-ones(inputnum*hiddennum_best,1)          %ÊäÈë²ãµ½Òşº¬²ãµÄÁ¬½ÓÈ¨Öµ·¶Î§ÊÇ[-1 1]    ÏÂÏŞÎª-1
-    zeros(hiddennum_best,1)];              %Òşº¬²ããĞÖµ·¶Î§ÊÇ[0 1]  ÏÂÏŞÎª0
-%×Ô±äÁ¿ÉÏÏŞ
+disp('GAä¼˜åŒ–ELMæé™å­¦ä¹ æœºï¼š')
+% åˆå§‹åŒ–gaå‚æ•°
+PopulationSize_Data=30;   % åˆå§‹ç§ç¾¤è§„æ¨¡
+MaxGenerations_Data=80;   % æœ€å¤§è¿›åŒ–ä»£æ•°
+CrossoverFraction_Data=0.8;  % äº¤å‰æ¦‚ç‡
+MigrationFraction_Data=0.2;   % å˜å¼‚æ¦‚ç‡
+nvars=inputnum*hiddennum_best+hiddennum_best;    % è‡ªå˜é‡ä¸ªæ•°
+% è‡ªå˜é‡ä¸‹é™
+lb=[-ones(inputnum*hiddennum_best,1)          % è¾“å…¥å±‚åˆ°éšå«å±‚çš„è¿æ¥æƒå€¼èŒƒå›´æ˜¯[-1 1]    ä¸‹é™ä¸º-1
+    zeros(hiddennum_best,1)];              % éšå«å±‚é˜ˆå€¼èŒƒå›´æ˜¯[0 1]  ä¸‹é™ä¸º0
+% è‡ªå˜é‡ä¸Šé™
 ub=ones(nvars,1);
 
 
-%µ÷ÓÃÒÅ´«Ëã·¨º¯Êı
+% è°ƒç”¨é—ä¼ ç®—æ³•å‡½æ•°
 options = optimoptions('ga');
 options = optimoptions(options,'PopulationSize', PopulationSize_Data);
 options = optimoptions(options,'CrossoverFraction', CrossoverFraction_Data);
 options = optimoptions(options,'MigrationFraction', MigrationFraction_Data);
 options = optimoptions(options,'MaxGenerations', MaxGenerations_Data);
-options = optimoptions(options,'SelectionFcn', @selectionroulette);   %ÂÖÅÌ¶ÄÑ¡Ôñ
-options = optimoptions(options,'CrossoverFcn', @crossovertwopoint);   %Á½µã½»²æ
-options = optimoptions(options,'MutationFcn', {  @mutationgaussian [] [] });   %¸ßË¹±äÒì
-options = optimoptions(options,'Display', 'off');    %¡®off¡¯Îª²»ÏÔÊ¾µü´ú¹ı³Ì£¬¡®iter¡¯ÎªÏÔÊ¾µü´ú¹ı³Ì
-options = optimoptions(options,'PlotFcn', { @gaplotbestf });    %×î¼ÑÊÊÓ¦¶È×÷Í¼
+options = optimoptions(options,'SelectionFcn', @selectionroulette);   %è½®ç›˜èµŒé€‰æ‹©
+options = optimoptions(options,'CrossoverFcn', @crossovertwopoint);   %ä¸¤ç‚¹äº¤å‰
+options = optimoptions(options,'MutationFcn', {  @mutationgaussian [] [] });   %é«˜æ–¯å˜å¼‚
+options = optimoptions(options,'Display', 'off');    %â€˜offâ€™ä¸ºä¸æ˜¾ç¤ºè¿­ä»£è¿‡ç¨‹ï¼Œâ€˜iterâ€™ä¸ºæ˜¾ç¤ºè¿­ä»£è¿‡ç¨‹
+options = optimoptions(options,'PlotFcn', { @gaplotbestf });    %æœ€ä½³é€‚åº”åº¦ä½œå›¾
 
-%Çó½â
+% æ±‚è§£
 [bestx,fval] = ga(@fitness,nvars,[],[],[],[],lb,ub,[],[],options);
 delete('para.mat')
 
-%% ÓÅ»¯ºóµÄ²ÎÊıÑµÁ·ELM¼«ÏŞÑ§Ï°»úÄ£ĞÍ
-[IW1,B1,LW1,TF,TYPE] = elmtrain(inputn,outputn,hiddennum_best,bestx);          %IW1   B1  LW1ÎªÓÅ»¯ºóµÄELMÇóµÃµÄÑµÁ·²ÎÊı
+%% ä¼˜åŒ–åçš„å‚æ•°è®­ç»ƒELMæé™å­¦ä¹ æœºæ¨¡å‹
+[IW1,B1,LW1,TF,TYPE] = elmtrain(inputn,outputn,hiddennum_best,bestx);          %IW1   B1  LW1ä¸ºä¼˜åŒ–åçš„ELMæ±‚å¾—çš„è®­ç»ƒå‚æ•°
 
-%% ÓÅ»¯ºóµÄELMÄ£ĞÍ²âÊÔ
+%% ä¼˜åŒ–åçš„ELMæ¨¡å‹æµ‹è¯•
 an1=elmpredict(inputn_test,IW1,B1,LW1,TF,TYPE); 
 test_simu1=mapminmax('reverse',an1,outputps);
 
-%Îó²îÖ¸±ê
+% è¯¯å·®æŒ‡æ ‡
 [mae1,mse1,rmse1,mape1,error1,errorPercent1]=calc_error(output_test,test_simu1);
 
-%% ×÷Í¼
+%% ä½œå›¾
 figure
 plot(output_test,'g-.o','linewidth',1)
 hold on
 plot(test_simu0,'b-*','linewidth',1)
 hold on
 plot(test_simu1,'r-v','linewidth',1)
-legend('ÕæÊµÖµ','ELMÔ¤²âÖµ','GA-ELMÔ¤²âÖµ')
-xlabel('²âÊÔÑù±¾±àºÅ')
-ylabel('Ö¸±êÖµ')
-title('ÓÅ»¯Ç°ºóµÄELMÄ£ĞÍÔ¤²âÖµºÍÕæÊµÖµ¶Ô±ÈÍ¼')
+legend('çœŸå®å€¼','ELMé¢„æµ‹å€¼','GA-ELMé¢„æµ‹å€¼')
+xlabel('æµ‹è¯•æ ·æœ¬ç¼–å·')
+ylabel('æŒ‡æ ‡å€¼')
+title('ä¼˜åŒ–å‰åçš„ELMæ¨¡å‹é¢„æµ‹å€¼å’ŒçœŸå®å€¼å¯¹æ¯”å›¾')
 
 figure
 plot(error0,'b-*','markerfacecolor','r')
 hold on
 plot(error1,'r-v','markerfacecolor','r')
-legend('ELMÔ¤²âÎó²î','GA-ELMÔ¤²âÎó²î')
-xlabel('²âÊÔÑù±¾±àºÅ')
-ylabel('Ô¤²âÆ«²î')
-title('ÓÅ»¯Ç°ºóµÄELMÄ£ĞÍÔ¤²âÖµºÍÕæÊµÖµÎó²î¶Ô±ÈÍ¼')
+legend('ELMé¢„æµ‹è¯¯å·®','GA-ELMé¢„æµ‹è¯¯å·®')
+xlabel('æµ‹è¯•æ ·æœ¬ç¼–å·')
+ylabel('é¢„æµ‹åå·®')
+title('ä¼˜åŒ–å‰åçš„ELMæ¨¡å‹é¢„æµ‹å€¼å’ŒçœŸå®å€¼è¯¯å·®å¯¹æ¯”å›¾')
 
 disp(' ')
 disp('/////////////////////////////////')
-disp('´òÓ¡½á¹û±í¸ñ')
-disp('Ñù±¾ĞòºÅ     Êµ²âÖµ      ELMÔ¤²âÖµ  GA-ELMÖµ   ELMÎó²î   GA-ELMÎó²î')
+disp('æ‰“å°ç»“æœè¡¨æ ¼')
+disp('æ ·æœ¬åºå·     å®æµ‹å€¼      ELMé¢„æµ‹å€¼  GA-ELMå€¼   ELMè¯¯å·®   GA-ELMè¯¯å·®')
 for i=1:testNum
     disp([i output_test(i),test_simu0(i),test_simu1(i),error0(i),error1(i)])
 end
-
-
-
-
-
