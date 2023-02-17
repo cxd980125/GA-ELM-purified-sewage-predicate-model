@@ -6,22 +6,24 @@
 
 ### 1.2 ELM极限学习机
 极限学习机（ELM）算法，随机产生输入层与隐含层间的连接权值及隐含层神经元的阈值，且在训练过程中无需调整，只需设置隐含层神经元的个数，便可获得唯一的最优解，与传统的BP神经网络算法相比，ELM方法学习速度快、泛化性能好。
-但和传统的神经网络相比一样容易陷入局部最优的问题，继而打算引入遗传算法GA，通过数据交叉、变异和可迭代收敛等特点达到全局最优解的效果。
+但和传统的神经网络相比一样容易陷入局部最优的问题，且因为连接权值可能随机生成0导致该节点失效，从而影响整体模型结果，继而引入遗传算法GA进行优化，通过数据交叉、变异和可迭代收敛等特点达到全局最优解的效果。
 
 ### 1.3 GA遗传算法
 遗传算法通过数学的方式,利用计算机仿真运算,将问题的求解过程转换成类似生物进化中的染色体基因的交叉、变异等过程。在求解较为复杂的组合优化问题时,相对一些常规的优化算法,通常能够较快地获得较好的优化结果。
-### 1.4 数据选取
-选取每日运营数据作为模型训练数据源，
+
 ## 二、GA-ELM模型
 
 
 
-## 三、
+## 三、结果展示
 
-## 可执行EXE文件UI界面
-![markdown](https://github.com/cxd980125/GA-ELM-purified-sewage-predicate-model/blob/master/image/%E6%B0%B4%E5%A4%84%E7%90%86%E6%A8%A1%E5%9E%8BUI%E7%95%8C%E9%9D%A2.png)
+### 可执行EXE文件UI界面
 <div align="center">
   <img src="https://github.com/cxd980125/GA-ELM-purified-sewage-predicate-model/blob/master/image/%E6%B0%B4%E5%A4%84%E7%90%86%E6%A8%A1%E5%9E%8BUI%E7%95%8C%E9%9D%A2.png">
 </div>
 
+### GA演算过程
 
+<div align="center">
+  <img src="https://github.com/cxd980125/GA-ELM-purified-sewage-predicate-model/blob/master/image/GA%E6%BC%94%E7%AE%97%E7%BB%93%E6%9E%9C.png">
+</div>
